@@ -5,30 +5,15 @@ $id = $_GET['id'];
 $query = mysqli_query($con, "SELECT * FROM tbl_anggota where id = '$id'");
 $isiAnggota = $query->fetch_assoc();
 $query2 = mysqli_query($con, "SELECT * FROM tbl_jurusan");
-$isi = $query2->fetch_assoc();
 $query3 = mysqli_query($con, "SELECT * FROM tbl_jabatan");
-$isiJabatan = $query3->fetch_assoc();
 
-if ($isi['jurusan'] == 1) {
-  $jj = 'Manajemen Informatika';
-} else if ($isi['jurusan'] == 2) {
-  $jj = 'Manajemen Pemasaran';
-} else if ($isi['jurusan'] == 3) {
-  $jj = 'Manajemen Keuangan dan Perbankan';
-} else if ($isi['jurusan'] == 4) {
-  $jj = 'Administrasi Bisnis';
-} else if ($isi['jurusan'] == 5) {
-  $jj = 'Teknik Otomotif';
-} else {
-  $jj = 'Jenis Surat Tidak Terdaftar';
-}
 ?>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-  <title>Update</title>
+  <title>Edit Data</title>
 
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
@@ -46,40 +31,65 @@ if ($isi['jurusan'] == 1) {
         <row>
           <div class="card">
             <div class="card-body">
-              <form class="row g-3" method="post" action="edit.php?id=<?php echo $isi['id'] ?>" name="form1">
+              <form class="row g-3" method="post" action="edit.php?id=<?php echo $isiAnggota['id'] ?>" name="form1">
                 <div class="col-md-12">
-                  <input type="hidden" class="form-control" name="id" value="<?php echo $isi['id'] ?>">
+                  <input type="hidden" class="form-control" name="id" value="<?php echo $isiAnggota['id'] ?>">
                 </div>
                 <div class="col-md-6">
                   <label for="nim" class="form-label">NIM</label>
-                  <input type="text" class="form-control" id="nim" name="nim" value="<?php echo $isi['nim'] ?>">
+                  <input type="text" class="form-control" id="nim" name="nim" value="<?php echo $isiAnggota['nim'] ?>">
                 </div>
                 <div class="col-md-6">
                   <label for="nama" class="form-label">Nama Lengkap</label>
-                  <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $isi['nama'] ?>">
+                  <input type="text" class="form-control" id="nama" name="nama" value="<?php echo $isiAnggota['nama'] ?>">
                 </div>
                 <div class="col-md-6">
                   <label for="no_hp" class="form-label">NO HP</label>
-                  <input type="text" class="form-control" id="no_hp" name="no_hp" value="<?php echo $isi['no_hp'] ?>">
+                  <input type="text" class="form-control" id="no_hp" name="no_hp" value="<?php echo $isiAnggota['no_hp'] ?>">
                 </div>
                 <div class="col-md-6">
                   <label for="alamat" class="form-label">Alamat</label>
-                  <input type="text" class="form-control" id="alamat" name="alamat" value="<?php echo $isi['alamat'] ?>">
+                  <input type="text" class="form-control" id="alamat" name="alamat" value="<?php echo $isiAnggota['alamat'] ?>">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label for="jurusan" class="form-label">Jurusan</label>
                   <select id="jurusan" class="form-select" name="jurusan">
-                    <option selected value="<?php echo $isi['jurusan'] ?>"><?php echo $js ?>---</option>
-                    <option value="1">Manajemen Informatika</option>
-                    <option value="2">Manajemen Pemasaran</option>
-                    <option value="3">Manajemen Keuangan dan Perbankan</option>
-                    <option value="4">Administrasi Bisnis</option>
-                    <option value="5">Teknik Otomotif</option>
+
+                    <?php
+                    foreach ($query2 as $jurusan) {
+                      if ($jurusan['id_jurusan'] == $isiAnggota['jurusan']) {
+                    ?>
+                        <option selected value="<?= $jurusan['id_jurusan'] ?>"><?php echo $jurusan['jurusan'] ?></option>
+                      <?php
+                      }
+                      ?>
+                      <option value="<?= $jurusan['id_jurusan'] ?>"><?= $jurusan['jurusan'] ?></option>
+                    <?php
+                    }
+                    ?>
                   </select>
                 </div>
-                <div d-grid gap-2 d-md-block>
+                <div class="col-md-6">
+                  <label for="jabatan" class="form-label">Jabatan</label>
+                  <select id="jabatan" class="form-select" name="jabatan">
+                    <option selected>Masukan Pilihan</option>
+                    <?php
+                    foreach ($query3 as $jabatan) {
+                      if ($jabatan['id_jabatan'] == $isiAnggota['jabatan']) {
+                    ?>
+                        <option selected value="<?= $jabatan['id_jabatan'] ?>"><?php echo $jabatan['jabatan'] ?></option>
+                      <?php
+                      }
+                      ?>
+                      <option value="<?= $jabatan['id_jabatan'] ?>"><?= $jabatan['jabatan'] ?></option>
+                    <?php
+                    }
+                    ?>
+                  </select>
+                </div>
+                <div class="d-grid gap-2 d-md-block">
                   <button type="submit" class="btn btn-primary" name="update">Update</button>
-                  <button type="submit" class="btn btn-danger" name="batal">Cancel</button>
+                  <a href="view.php" class="btn btn-danger" name="batal">Cancel</a>
                 </div>
               </form>
             </div>
@@ -104,9 +114,15 @@ if ($isi['jurusan'] == 1) {
     `jurusan`='$jurusan',
     `jabatan`='$jabatan'
     WHERE
-    `id`='$id';
-  ");
-        header("Location:view.php?pesan=success&&frm=view");
+    `id`='$id'");
+
+        // var_dump($id);
+        // die;
+        if (isset($_POST['update'])) {
+          echo "<script>window.location.href='view.php?pesan=success&frm=edit';</script>";
+          header("Location:view.php?pesan=success&&frm=edit");
+          exit;
+        }
       }
       ?>
 
