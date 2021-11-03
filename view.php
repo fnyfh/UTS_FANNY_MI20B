@@ -61,6 +61,7 @@ $data = $result->fetch_assoc();
           <td>NIM</td>
           <td>Nama Lengkap</td>
           <td>NO HP</td>
+          <td>Alamat</td>
           <td>Jurusan</td>
           <td>Jabatan</td>
           <td>Aksi</td>
@@ -79,25 +80,25 @@ $data = $result->fetch_assoc();
             $jurusan = "Administrasi Bisnis";
           } elseif ($data['jurusan'] == "5") {
             $jurusan = "Teknik Otomotif";
+          } else {
+            echo "kode bermasalah";
           }
           if ($data['jabatan'] == "1") {
             $jabatan = "Ketua";
           } elseif ($data['jabatan'] == "2") {
             $jabatan = "Wakil Ketua";
           } elseif ($data['jabatan'] == "3") {
-            $jabatan = "Sekretaris 1";
-          } elseif ($data['jabatan'] == "4") {
-            $jabatan = "Sekretaris 2";
+            $jabatan = "Sekretaris";
           } elseif ($data['jabatan'] == "5") {
-            $jabatan = "Bendahara 1";
-          } elseif ($data['jabatan'] == "6") {
-            $jabatan = "Bendahara 2";
+            $jabatan = "Bendahara";
           } elseif ($data['jabatan'] == "7") {
-            $jabatan = "Biro Pendidikan 1";
+            $jabatan = "Biro Dokumentasi";
           } elseif ($data['jabatan'] == "8") {
-            $jabatan = "Biro Pendidikan 2";
+            $jabatan = "Biro Pendidikan";
           } elseif ($data['jabatan'] == "9") {
             $jabatan = "Anggota";
+          } else {
+            echo "kode bermasalah";
           }
         ?>
 
@@ -105,26 +106,27 @@ $data = $result->fetch_assoc();
             <td><?= $data["nim"]; ?></td>
             <td><?= $data["nama"]; ?></td>
             <td><?= $data["no_hp"]; ?></td>
+            <td><?= $data["alamat"]; ?></td>
             <td><?= $jurusan; ?></td>
             <td><?= $jabatan; ?></td>
             <td align="center">
-              <a href="edit.php?id=<?php echo $data['id']; ?>" class="btn btn-danger" title="Edit"><i class="fa fa-edit"></i>Edit</a>
-              <a href="#" data-bs-toggle="modal" data-bs-target="#deletesurat<?php echo $isi['id']; ?>" class="btn btn-secondary" title="Hapus"><i class="fa fa-trash"></i>Delete</a>
+              <a href="edit.php?id=<?php echo $data['id']; ?>" class="btn btn-danger" title="Edit"><i class="fa fa-edit"></i></a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#deletedata<?php echo $data['id']; ?>" class="btn btn-secondary" title="Hapus"><i class="fa fa-trash"></i></a>
             </td>
           </tr>
           <div class="example-modal">
-            <div id="deletesurat<?php echo $isi['id'] ?>" class="modal fade" role="dialog" style="display: none;">
+            <div id="deletedata<?php echo $data['id'] ?>" class="modal fade" role="dialog" style="display: none;">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <form class="row g-3" method="post" action="delete.php" name="form1">
                     <div class="modal-header">
                       <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times</span></button>
-                      <h3 class="modal-title">Konfirmasi Delete Data Surat</h3>
+                      <h3 class="modal-title">Konfirmasi Delete Data Anggota</h3>
                     </div>
                     <div class="modal-body">
-                      <input type="hidden" class="form-control" name="id" value="<?php echo $isi['id']; ?>">
-                      <h4 align="center">Apakah anda yakin ingin menghapus no surat <?php echo $isi['no_surat']; ?>
-                        <strong><span class="grt"></span></strong>?
+                      <input type="hidden" class="form-control" name="id" value="<?php echo $data['id']; ?>">
+                      <h4 align="center">Apakah anda yakin ingin menghapus data? <?php echo $data['nim']; ?>
+                        <strong><span class="grt"></span></strong>
                       </h4>
                     </div>
                     <div class="modal-footer">
